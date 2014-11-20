@@ -1,0 +1,5 @@
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+rm "${DIR}/sol"
+CLASSDIR="${DIR}/Source/"
+cp "${CLASSDIR}Main.py" "${DIR}/sol"
+chmod +x "${DIR}/sol"
