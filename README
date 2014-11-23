@@ -1,8 +1,120 @@
 Readme.pdf - A write up of no more than 4 pages with description and analysis of your implementation. In particular, we expect the following:
-- A mathematical formulation of the problem to be solved
-- A high level, English description of the algorithm you used to solve the problem
-- A pseudo code description of the algorithm
 - A proof of correctness of the algorithm
 - A run time analysis of your algorithm, accounting for the insert / query run times of the data structures you used in your implementation
+
+---------- A Mathematical Formulation: ----------
+
+Given k sequences of real numbers a1, a2, ..., an, find an index i such that ai
+>= aj for all 1 >= j >= n for each sequence. The highest summation - if one value
+can be taken from each sequence - is thus: sum of s1, s2, ..., sk for all 1 to k.
+
+This represents finding the max value for each iteration; eventually, adding all
+of the max values together. This will give us the highest possible value for k
+iterations.
+
+---------- The High Level Approach: ----------
+
+Super brief: Find the root node from all of the trees with the highest accumulated value
+from a leaf to that node. Traverse up the tree from the associated leaf. Remove each node
+encountered. The children of the removed nodes are now standalone trees. Add those trees to the priority queue if they have not already been deleted. Add the value at the original root node to the current_max. Repeat k times.
+
+More detail: The only nodes that can lead to the maximum influence are the leaf nodes. This
+assumes that all values for the nodes are >= 0. This is because the node above a
+leaf node will always have a lower or equal accumulated path influence from the top of
+whatever tree it is in. This is because it is previous_influence + influence at
+node >= previous_influence
+
+
+previous_influence + influence at the leaf; on the other hand, the node above
+will only have the previous_influence. So, our first task is to find a list
+of all the leaf nodes.
+
+Next, we need to find data for each node. This will make future calculations a lot
+faster and more convinent if we have this data to work with. We need to find
+what leaf node will lead to the highest accumulated path from each node. We also
+need to keep track of this accumulated value. The last thing we need is the
+direct children of each node.
+
+Next, we delete the path from the leaf to the top of a tree that gives the
+highest influence. This will be found from a priority queue for a fast look up.
+When such a path is deleted, we add the direct children of each node encountered
+that are still not deleted to the priority queue. These child nodes are now standalone
+trees. That's why we have to add them.
+
+We repeat this k times. Each time we pick the tree node that will lead to the
+maximum accumulated value. When the node is found, we already have access to
+that value AND the leaf node from which it starts. We traverse and add more
+trees to the priority queue.
+
+Pseudo Code Description:
+
+Read_STDIN:
+  Read the file and organize the data accordingly
+
+Find_leaf_nodes(Employees, N):
+  Scan through the employee data. For each BOSS_ID
+  flag that node to not be a leaf node. A leaf node
+  will never be a BOSS_ID for another node.
+
+  flag_nodes = TRUE for all
+  for:
+    loop through data and change to FALSE if BOSS_ID found
+  for:
+    loop through data and find all that are still TRUE.
+    Return list of leaf nodes
+
+Initalize_tree(employees, leaf_nodes, N):
+  For each node calculate [0,[],0]
+  - The leaf node that leads to the highest accumulated value from
+  this node
+  - Direct children from the node
+  - Highest accumulated value from this node to a leaf node
+
+  For each leaf node:
+    While we are not at the CEO or at a deleted node:
+      - Add to the children of the next node if not done already
+      - Change the stored accumulated value if it is greater than the one there
+      - Add the associated leaf node if we are changing the accumulated value
+
+  return data
+
+Find_maximum_influence(data, employees, k, N)
+  current_max = 0
+  Form the priority queue and add the CEO
+  Create a flag array to keep track of deleted nodes
+
+  For k times:
+    Pop off the queue and add value to current max
+    Mark current node to be deleted
+
+    While (not CEO or deleted node):
+      Iterate upwards. Delete the nodes as we go.
+
+      For all children in each node:
+        Add child to priority queue if not already deleted
+
+   return current max;
+
+Algorithm()
+  Call all functions to set everything up properly.
+  print the max value returned
+
+Run time analysis:
+  (n + k log n)
+
+  Traverse through all the nodes to find the leaf nodes
+  2n..
+
+  Traverse through each node to initalize the data. Leaf nodes * height for the
+  worst case.
+
+
+
+
+
+
+
+
+
 
 
