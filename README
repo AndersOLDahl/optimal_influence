@@ -1,0 +1,8 @@
+Readme.pdf - A write up of no more than 4 pages with description and analysis of your implementation. In particular, we expect the following:
+- A mathematical formulation of the problem to be solved
+- A high level, English description of the algorithm you used to solve the problem
+- A pseudo code description of the algorithm
+- A proof of correctness of the algorithm
+- A run time analysis of your algorithm, accounting for the insert / query run times of the data structures you used in your implementation
+
+
