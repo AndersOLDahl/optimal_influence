@@ -96,16 +96,19 @@ Algorithm()
 ---------- Proof of Correctness: ----------
 
 If we refer back to the mathematical formula from the start. For each iteration,
-we find the value in the sequence that will lead to the highest influence. These
-sequences represents the accumulated values for all the root nodes of all our trees.
-These values are guaranteed to be the highest for each specific tree by the way
-we calculated it to begin with. We looped through all our leaf nodes and changed
-the values of the accumulated influence only if it was greater than what
-was already there. This guarantees that we get the largest possible from all
-of the leaf nodes available from that node. By the way we delete nodes,
+we find the value in the sequence that will lead to the highest influence (each
+iteration has a corresponding sequence). A sequence represents the accumulated values
+for all the root nodes of all our trees for that iteration. These values are
+guaranteed to be the highest for each specific tree by the way
+we calculated it to begin with. We looped through all our leaf nodes and
+traversed upwards. We changed the values of the accumulated influence only if
+it was greater than what was already there. This guarantees that we get the largest
+possible from all of the leaf nodes available from each node. By the way we delete nodes,
 only a node that has been completely detached and formed a seperate tree will be
 added to the priorty queue. This makes sense, because the root nodes will always
-contain the highest accumulated value for that tree.
+contain the highest accumulated value for that tree. This is again, from the way
+we calculate it. Since each node's value is >= 0. The accumulated value of a
+node that is the parent will always be >= the accumulated value of a child node.
 
 ---------- Run time analysis: ----------
 
@@ -119,7 +122,7 @@ contain the highest accumulated value for that tree.
   is O(n) for this part.
 
   All the look ups except for the priority queue use lists. These are all done
-  in O(1) time.
+  in O(1) time. Priority max lookup is also done in O(1).
 
   For finding the maximum, we iterate k times. We add a node to
   the priority queue for each iteration unless we have exhausted everything.
