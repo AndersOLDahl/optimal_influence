@@ -1,7 +1,3 @@
-Readme.pdf - A write up of no more than 4 pages with description and analysis of your implementation. In particular, we expect the following:
-- A proof of correctness of the algorithm
-- A run time analysis of your algorithm, accounting for the insert / query run times of the data structures you used in your implementation
-
 ---------- A Mathematical Formulation: ----------
 
 Given k sequences of real numbers a1, a2, ..., an, find an index i such that ai
@@ -16,22 +12,20 @@ iterations.
 
 Super brief: Find the root node from all of the trees with the highest accumulated value
 from a leaf to that node. Traverse up the tree from the associated leaf. Remove each node
-encountered. The children of the removed nodes are now standalone trees. Add those trees to the priority queue if they have not already been deleted. Add the value at the original root node to the current_max. Repeat k times.
+encountered. The children of the removed nodes are now standalone trees. Add those trees to
+the priority queue if they have not already been deleted. Add the value at the original
+root node to the current_max. Repeat k times.
 
 More detail: The only nodes that can lead to the maximum influence are the leaf nodes. This
 assumes that all values for the nodes are >= 0. This is because the node above a
-leaf node will always have a lower or equal accumulated path influence from the top of
-whatever tree it is in. This is because it is previous_influence + influence at
-node >= previous_influence
-
-
-previous_influence + influence at the leaf; on the other hand, the node above
-will only have the previous_influence. So, our first task is to find a list
+another node will always have a lower or equal accumulated path influence from
+the top of that specific tree. This is because previous accumulated influence + influence at
+next node >= previous accumulated influence. So, our first task is to find a list
 of all the leaf nodes.
 
-Next, we need to find data for each node. This will make future calculations a lot
+Next, we need to find some data for each node. This will make future calculations a lot
 faster and more convinent if we have this data to work with. We need to find
-what leaf node will lead to the highest accumulated path from each node. We also
+what leaf will lead to the highest accumulated value to that node. We also
 need to keep track of this accumulated value. The last thing we need is the
 direct children of each node.
 
@@ -41,12 +35,12 @@ When such a path is deleted, we add the direct children of each node encountered
 that are still not deleted to the priority queue. These child nodes are now standalone
 trees. That's why we have to add them.
 
-We repeat this k times. Each time we pick the tree node that will lead to the
+We repeat this k times. Each time we pick the root tree node that will lead to the
 maximum accumulated value. When the node is found, we already have access to
 that value AND the leaf node from which it starts. We traverse and add more
 trees to the priority queue.
 
-Pseudo Code Description:
+---------- Pseudo Code Description: ----------
 
 Read_STDIN:
   Read the file and organize the data accordingly
@@ -72,7 +66,7 @@ Initalize_tree(employees, leaf_nodes, N):
 
   For each leaf node:
     While we are not at the CEO or at a deleted node:
-      - Add to the children of the next node if not done already
+      - Add to the children of the next node if it has not been done already
       - Change the stored accumulated value if it is greater than the one there
       - Add the associated leaf node if we are changing the accumulated value
 
@@ -85,7 +79,7 @@ Find_maximum_influence(data, employees, k, N)
 
   For k times:
     Pop off the queue and add value to current max
-    Mark current node to be deleted
+    Mark current leaf node to be deleted
 
     While (not CEO or deleted node):
       Iterate upwards. Delete the nodes as we go.
@@ -99,22 +93,34 @@ Algorithm()
   Call all functions to set everything up properly.
   print the max value returned
 
-Run time analysis:
-  (n + k log n)
+---------- Proof of Correctness: ----------
 
-  Traverse through all the nodes to find the leaf nodes
-  2n..
+If we refer back to the mathematical formula from the start. For each iteration,
+we find the value in the sequence that will lead to the highest influence. These
+sequences represents the accumulated values for all the root nodes of all our trees.
+These values are guaranteed to be the highest for each specific tree by the way
+we calculated it to begin with. We looped through all our leaf nodes and changed
+the values of the accumulated influence only if it was greater than what
+was already there. This guarantees that we get the largest possible from all
+of the leaf nodes available from that node. By the way we delete nodes,
+only a node that has been completely detached and formed a seperate tree will be
+added to the priorty queue. This makes sense, because the root nodes will always
+contain the highest accumulated value for that tree.
 
-  Traverse through each node to initalize the data. Leaf nodes * height for the
-  worst case.
+---------- Run time analysis: ----------
 
+  We traverse through all the nodes twice to find the leaf nodes. This is done
+  in 2n. Reading stdin makes in 3n. For each leaf we traverse the tree at most
+  n - 1 times. When we find the maximum we will also only iterate through the
+  nodes at most about n times because we would short circuit if we got to the CEO
+  or a deleted node. All of this assumes all calculations are weighted equally.
+  Overall, however, this ends up being just a constant * n. So our complexity
+  is O(n) for this part.
 
+  For finding the maximum, we iterate k times. We have to add a node to
+  the priority queue for each iteration unless we have exhausted everything.
+  Insertion to the binary heap can be done in (log n) time. We will iterate
+  k times so the complexity is constant * klogn which is O(klogn). Overall,
+  the total running time is:
 
-
-
-
-
-
-
-
-
+  TOTAL : O(n + k log n)
