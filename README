@@ -110,14 +110,18 @@ contain the highest accumulated value for that tree.
 ---------- Run time analysis: ----------
 
   We traverse through all the nodes twice to find the leaf nodes. This is done
-  in 2n. Reading stdin makes in 3n. For each leaf we traverse the tree at most
+  in 2n. Reading stdin makes in 3n. We have 2 flags spanning N values so now it
+  is 4n. For each leaf we traverse the tree at most
   n - 1 times. When we find the maximum we will also only iterate through the
   nodes at most about n times because we would short circuit if we got to the CEO
   or a deleted node. All of this assumes all calculations are weighted equally.
-  Overall, however, this ends up being just a constant * n. So our complexity
+  Overall, however, this ends up just being a constant * n. So our complexity
   is O(n) for this part.
 
-  For finding the maximum, we iterate k times. We have to add a node to
+  All the look ups except for the priority queue use lists. These are all done
+  in O(1) time.
+
+  For finding the maximum, we iterate k times. We add a node to
   the priority queue for each iteration unless we have exhausted everything.
   Insertion to the binary heap can be done in (log n) time. We will iterate
   k times so the complexity is constant * klogn which is O(klogn). Overall,
